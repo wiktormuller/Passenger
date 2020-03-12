@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Passenger.Infrastructure.Commands.Users;
 using Passenger.Infrastructure.Dto;
 using Passenger.Infrastructure.Services;
 
@@ -23,10 +24,23 @@ namespace Passenger.Api.Controllers
         }
 
         [HttpGet("{email}")]
-        public UserDto Get(string email)
+        public IActionResult Get(string email)
         {
             var model = _userService.Get(email);
-            return model;
+            if(model == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(model);
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody]CreateUser request)
+        {
+            _userService.Register(request.Email, request.Username, request.Password);
+
+            return Created($"users/{request.Email}", new object());
         }
     }
 }

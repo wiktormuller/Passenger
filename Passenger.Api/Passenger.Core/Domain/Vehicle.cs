@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Passenger.Core.Domain
 {
-    public class Vehicle
+    public class Vehicle    //ValueObject -> Immutable
     {
         public string Brand { get; protected set; }
         public string Name { get; protected set; }

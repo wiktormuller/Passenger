@@ -1,31 +1,28 @@
-﻿using Passenger.Core.Domain;
+﻿using AutoMapper;
+using Passenger.Core.Domain;
 using Passenger.Core.Repositories;
 using Passenger.Infrastructure.Dto;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Passenger.Infrastructure.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public UserDto Get(string email)
         {
             var user = _userRepository.Get(email);  //WHAT IF NOT EXISTS
-            return new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                FullName = user.FullName
-            };
+            var model = _mapper.Map<User, UserDto>(user);
+
+            return model;
         }
 
         public void Register(string email, string username, string password)
