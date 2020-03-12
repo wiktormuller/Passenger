@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Passenger.Infrastructure.Commands;
 using Passenger.Infrastructure.Commands.Users;
 using Passenger.Infrastructure.Dto;
 using Passenger.Infrastructure.Services;
@@ -12,12 +13,12 @@ namespace Passenger.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : ApiControllerBase
     {
-        private readonly ILogger<UsersController> _logger;   //FOR WHAT IS IT THAT LOGGER?
+        private readonly ILogger<UserController> _logger;   //FOR WHAT IS IT THAT LOGGER?
         private readonly IUserService _userService;
 
-        public UsersController(ILogger<UsersController> logger, IUserService userService)
+        public UserController(ILogger<UserController> logger, IUserService userService, ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
             _logger = logger;
             _userService = userService;
@@ -36,11 +37,11 @@ namespace Passenger.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]CreateUser request)
+        public async Task<IActionResult> Post([FromBody]CreateUser command)
         {
-            _userService.Register(request.Email, request.Username, request.Password);
+            await CommandDispatcher.DispatchAsync(command);
 
-            return Created($"users/{request.Email}", new object());
+            return Created($"users/{command.Email}", new object());
         }
     }
 }
