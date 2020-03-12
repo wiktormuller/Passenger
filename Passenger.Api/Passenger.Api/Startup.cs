@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Passenger.Core.Repositories;
+using Passenger.Infrastructure.Repositories;
+using Passenger.Infrastructure.Services;
 
 namespace Passenger.Api
 {
@@ -26,6 +29,8 @@ namespace Passenger.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRepository, InMemoryUserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

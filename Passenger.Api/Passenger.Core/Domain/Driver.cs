@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Passenger.Core.Domain
 {
-    public class Driver
+    public class Driver //Aggregate root
     {
         public Guid Id { get; protected set; }
         public Guid UserId { get; protected set; }
